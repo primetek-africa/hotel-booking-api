@@ -1,0 +1,29 @@
+{
+  "name": "hotel-booking-api",
+  "version": "0.0.1",
+  "description": "Secure role-based Hotel Booking API",
+  "keywords": [
+    "JWT",
+    "Express.js",
+    "Socket.io",
+    "PostgreSQL"
+  ],
+  "homepage": "https://github.com/primetek-africa/hotel-booking-api#readme",
+  "bugs": {
+    "url": "https://github.com/primetek-africa/hotel-booking-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/primetek-africa/hotel-booking-api.git"
+  },
+  "license": "MIT",
+  "author": "Cristian Camilo <Cristianco9>",
+  "type": "module",
+  "main": "src/api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
