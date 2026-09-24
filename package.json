@@ -24,6 +24,7 @@
     "start": "node src/api.js",
     "dev": "nodemon src/api.js",
     "dev-dep": "npm install && npm install nodemon morgan eslint eslint-config-prettier eslint-plugin-prettier prettier --save-dev -D",
+    "env-var": "cp ./env/.envexample ./.env && echo \"Environment variables injected\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
