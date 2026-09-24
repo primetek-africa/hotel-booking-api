@@ -11,7 +11,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 // Middleware for logging HTTP requests
 import morgan from 'morgan';
-
+// Import the IP address and port from the network configuration module
+import { theIPAddress, port } from './libraries/netConfig.js';
 
 // Create the API with Express.js
 const api = express();
@@ -33,6 +34,20 @@ api.use(bodyParser.json());
 // Static files path
 // Store in the constant the project dirname
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+api.get('/', (req, res) => {
+    res.send("IP address and port working")
+})
+
+
+// Immediately Invoked Function Expression (IIFE) to run the server
+(async () => {
+  // Await the api to start listening on the specified IP address and port
+  const createApi = await api.listen(port, theIPAddress, (req, res) => {
+    // Log the server start information to the console
+    console.log(`Server on port http://${theIPAddress}:${port}`);
+  });
+})();
 
 // Export the API for the use in other files
 export default api;
