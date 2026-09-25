@@ -35,11 +35,6 @@ api.use(bodyParser.json());
 // Store in the constant the project dirname
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-api.get('/', (req, res) => {
-    res.send("IP address and port working")
-})
-
-
 // Immediately Invoked Function Expression (IIFE) to run the server
 (async () => {
   // Await the api to start listening on the specified IP address and port
