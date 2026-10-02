@@ -3,9 +3,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // UP - create the 'user' table
+    // UP - create the 'booking_status_history' table
     await queryInterface.createTable(
-      'user',
+      'booking_status_history',
       {
         id: {
           type: Sequelize.INTEGER,
@@ -14,52 +14,47 @@ module.exports = {
           unique: true,
           autoIncrement: true,
         },
-        first_name: {
-          type: Sequelize.STRING(50),
-          allowNull: false,
-        },
-        middle_name: {
-          type: Sequelize.STRING(50),
-          allowNull: true,
-        },
-        first_lastname: {
-          type: Sequelize.STRING(50),
-          allowNull: false,
-        },
-        second_lastname: {
-          type: Sequelize.STRING(50),
-          allowNull: true,
-        },
-        email: {
-          type: Sequelize.STRING(100),
-          allowNull: false,
-          unique: true,
-        },
-        password: {
-          type: Sequelize.STRING(100),
-          allowNull: false,
-        },
-        role: {
+        booking: {
           type: Sequelize.INTEGER,
           allowNull: false,
           references: {
-            model: 'user_role',
+            model: 'booking',
             key: 'id',
           },
           onDelete: 'RESTRICT',
           onUpdate: 'CASCADE',
         },
-        status: {
+        from_status: {
           type: Sequelize.INTEGER,
           allowNull: false,
           references: {
-            model: 'user_status',
+            model: 'booking_status',
             key: 'id',
           },
           onDelete: 'RESTRICT',
           onUpdate: 'CASCADE',
         },
-        last_login: {
+        to_status: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'booking_status',
+            key: 'id',
+          },
+          onDelete: 'RESTRICT',
+          onUpdate: 'CASCADE',
+        },
+        changed_by: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'user',
+            key: 'id',
+          },
+          onDelete: 'RESTRICT',
+          onUpdate: 'CASCADE',
+        },
+        changed_at: {
           type: Sequelize.DATE,
           allowNull: false,
         },
@@ -78,7 +73,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // DOWN - drop the 'user' table
-    await queryInterface.dropTable('user');
+    // DOWN - drop the 'booking_status_history' table
+    await queryInterface.dropTable('booking_status_history');
   }
 };

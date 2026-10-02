@@ -3,9 +3,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // UP - create the 'payment_method' table
+    // UP - create the 'phone' table
     await queryInterface.createTable(
-      'payment_method',
+      'phone',
       {
         id: {
           type: Sequelize.INTEGER,
@@ -14,10 +14,20 @@ module.exports = {
           unique: true,
           autoIncrement: true,
         },
-        name: {
-          type: Sequelize.STRING(30),
+        number: {
+          type: Sequelize.STRING(20),
           allowNull: false,
           unique: true,
+        },
+        user: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'user',
+            key: 'id',
+          },
+          onDelete: 'RESTRICT',
+          onUpdate: 'CASCADE',
         },
         created_at: {
           type: Sequelize.DATE,
@@ -34,7 +44,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // DOWN - drop the 'payment_method' table
-    await queryInterface.dropTable('payment_method');
+    // DOWN - drop the 'phone' table
+    await queryInterface.dropTable('phone');
   }
 };

@@ -10,7 +10,7 @@ module.exports = {
         // Define the 'id' column
         id: {
           // Integer type
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           // This field cannot be null
           allowNull: false,
           // Primary key
@@ -23,7 +23,7 @@ module.exports = {
         // Role name (e.g. 'Administrator', 'Staff', 'Guest')
         name: {
           // Varchar type limited to 30 characters
-          type: DataTypes.STRING(30),
+          type: Sequelize.STRING(30),
           // This field cannot be null
           allowNull: false,
           // Must be unique
@@ -32,7 +32,7 @@ module.exports = {
         // Creation date
         created_at: {
           // Date type
-          type: DataTypes.DATE,
+          type: Sequelize.DATE,
           // This field cannot be null
           allowNull: false,
           // By default automatically generate the value
@@ -41,7 +41,7 @@ module.exports = {
         // Last update date
         updated_at: {
           // Date type
-          type: DataTypes.DATE,
+          type: Sequelize.DATE,
           // This field cannot be null
           allowNull: false,
           // By default automatically generate the value
@@ -52,7 +52,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // DOWN - Drop the 'user_role' table
+    // DOWN - drop the 'user_role' table
     await queryInterface.dropTable('user_role');
   }
 };

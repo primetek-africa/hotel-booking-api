@@ -3,9 +3,9 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // UP - create the 'payment_method' table
+    // UP - create the 'room' table
     await queryInterface.createTable(
-      'payment_method',
+      'room',
       {
         id: {
           type: Sequelize.INTEGER,
@@ -14,10 +14,34 @@ module.exports = {
           unique: true,
           autoIncrement: true,
         },
-        name: {
-          type: Sequelize.STRING(30),
+        number: {
+          type: Sequelize.STRING(10),
           allowNull: false,
           unique: true,
+        },
+        type: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'room_type',
+            key: 'id',
+          },
+          onDelete: 'RESTRICT',
+          onUpdate: 'CASCADE',
+        },
+        floor: {
+          type: Sequelize.SMALLINT,
+          allowNull: false,
+        },
+        status: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'room_status',
+            key: 'id',
+          },
+          onDelete: 'RESTRICT',
+          onUpdate: 'CASCADE',
         },
         created_at: {
           type: Sequelize.DATE,
@@ -34,7 +58,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // DOWN - drop the 'payment_method' table
-    await queryInterface.dropTable('payment_method');
+    // DOWN - drop the 'room' table
+    await queryInterface.dropTable('room');
   }
 };
