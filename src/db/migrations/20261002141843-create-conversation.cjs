@@ -8,14 +8,14 @@ module.exports = {
       'conversation',
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           primaryKey: true,
           unique: true,
           autoIncrement: true,
         },
         guest: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'user',
@@ -25,7 +25,7 @@ module.exports = {
           onUpdate: 'CASCADE',
         },
         staff: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'user',
@@ -35,7 +35,7 @@ module.exports = {
           onUpdate: 'CASCADE',
         },
         status: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'conversation_status',

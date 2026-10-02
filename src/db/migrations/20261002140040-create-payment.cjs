@@ -8,14 +8,14 @@ module.exports = {
       'payment',
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           primaryKey: true,
           unique: true,
           autoIncrement: true,
         },
         booking: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'booking',
@@ -25,11 +25,11 @@ module.exports = {
           onUpdate: 'CASCADE',
         },
         amount: {
-          type: DataTypes.DECIMAL(10, 2),
+          type: Sequelize.DECIMAL(10, 2),
           allowNull: false,
         },
         method: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'payment_method',
@@ -39,7 +39,7 @@ module.exports = {
           onUpdate: 'CASCADE',
         },
         status: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'payment_status',
@@ -49,11 +49,11 @@ module.exports = {
           onUpdate: 'CASCADE',
         },
         paid_at: {
-          type: DataTypes.DATE,
+          type: Sequelize.DATE,
           allowNull: false,
         },
         processed_by: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'user',

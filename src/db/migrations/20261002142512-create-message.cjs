@@ -8,14 +8,14 @@ module.exports = {
       'message',
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           primaryKey: true,
           unique: true,
           autoIncrement: true,
         },
         conversation: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'conversation',
@@ -25,7 +25,7 @@ module.exports = {
           onDelete: 'CASCADE',
         },
         sender: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'user',
@@ -35,11 +35,11 @@ module.exports = {
           onDelete: 'CASCADE',
         },
         body: {
-          type: DataTypes.TEXT,
+          type: Sequelize.TEXT,
           allowNull: false,
         },
         send_at: {
-          type: DataTypes.DATE,
+          type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },

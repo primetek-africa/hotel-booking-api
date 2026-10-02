@@ -8,39 +8,39 @@ module.exports = {
       'user',
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           primaryKey: true,
           unique: true,
           autoIncrement: true,
         },
         first_name: {
-          type: DataTypes.STRING(50),
+          type: Sequelize.STRING(50),
           allowNull: false,
         },
         middle_name: {
-          type: DataTypes.STRING(50),
+          type: Sequelize.STRING(50),
           allowNull: true,
         },
         first_lastname: {
-          type: DataTypes.STRING(50),
+          type: Sequelize.STRING(50),
           allowNull: false,
         },
         second_lastname: {
-          type: DataTypes.STRING(50),
+          type: Sequelize.STRING(50),
           allowNull: true,
         },
         email: {
-          type: DataTypes.STRING(100),
+          type: Sequelize.STRING(100),
           allowNull: false,
           unique: true,
         },
         password: {
-          type: DataTypes.STRING(100),
+          type: Sequelize.STRING(100),
           allowNull: false,
         },
         role: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'user_role',
@@ -50,7 +50,7 @@ module.exports = {
           onUpdate: 'CASCADE',
         },
         status: {
-          type: DataTypes.INTEGER,
+          type: Sequelize.INTEGER,
           allowNull: false,
           references: {
             model: 'user_status',
@@ -60,16 +60,16 @@ module.exports = {
           onUpdate: 'CASCADE',
         },
         last_login: {
-          type: DataTypes.DATE,
+          type: Sequelize.DATE,
           allowNull: false,
         },
         created_at: {
-          type: DataTypes.DATE,
+          type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
         updated_at: {
-          type: DataTypes.DATE,
+          type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
