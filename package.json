@@ -36,12 +36,14 @@
     "seed:delete": "sequelize-cli db:seed:undo:all --options-path .sequelizerc.cjs"
   },
   "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^18.0.3",
     "express": "^5.2.1",
     "pg": "^8.23.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.8",
+    "sequelize": "^3.30.0",
     "sequelize-cli": "^6.6.5"
   },
   "devDependencies": {
@@ -49,7 +51,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "morgan": "^1.12.1",
-    "nodemon": "^3.1.14",
+    "nodemon": "^1.14.10",
     "prettier": "^3.9.9"
   }
 }
