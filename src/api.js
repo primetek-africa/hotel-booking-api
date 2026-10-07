@@ -17,6 +17,13 @@ import { testConnection } from './libraries/DBConnection.js';
 import { theIPAddress, port } from './libraries/netConfig.js';
 // Import the configuration module
 import { config } from './config/config.js';
+// Custom error handling middlewares
+import {
+  logError,
+  errorHandler,
+  boomErrorHandler,
+  ORMErrorHandler
+} from './middlewares/errorHandler.js';
 // Import the setup of the database entities associations
 import { setAssociations } from './db/models/index.js';
 
