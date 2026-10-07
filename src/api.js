@@ -88,5 +88,15 @@ setAssociations();
 // Call the function to ensure the database connection is working
 testConnection();
 
+// Use custom error handling middlewares
+// Middleware for logging errors
+api.use(logError);
+// Middleware for handling ORM errors
+api.use(ORMErrorHandler);
+// Middleware for handling Boom errors
+api.use(boomErrorHandler);
+// General error handling middleware
+api.use(errorHandler);
+
 // Export the API for the use in other files
 export default api;
