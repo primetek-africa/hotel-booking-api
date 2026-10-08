@@ -15,8 +15,17 @@ import morgan from 'morgan';
 import { testConnection } from './libraries/DBConnection.js';
 // Import the IP address and port from the network configuration module
 import { theIPAddress, port } from './libraries/netConfig.js';
+// Main router for the API
+import routerAPI from './routes/index.js';
 // Import the configuration module
 import { config } from './config/config.js';
+// Custom error handling middlewares
+import {
+  logError,
+  errorHandler,
+  boomErrorHandler,
+  ORMErrorHandler
+} from './middlewares/errorHandler.js';
 // Import the setup of the database entities associations
 import { setAssociations } from './db/models/index.js';
 
@@ -80,6 +89,20 @@ setAssociations();
 // Test database connection
 // Call the function to ensure the database connection is working
 testConnection();
+
+// Initialize the main router
+// Set up API routes
+routerAPI(api);
+
+// Use custom error handling middlewares
+// Middleware for logging errors
+api.use(logError);
+// Middleware for handling ORM errors
+api.use(ORMErrorHandler);
+// Middleware for handling Boom errors
+api.use(boomErrorHandler);
+// General error handling middleware
+api.use(errorHandler);
 
 // Export the API for the use in other files
 export default api;
