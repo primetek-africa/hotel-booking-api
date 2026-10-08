@@ -93,4 +93,57 @@ export class UserService {
       throw Boom.boomify(err, { message: 'Unable to create new user' });
     }
   }
+
+  /**
+   * Updates an existing user by id.
+   *
+   * Password and last login are intentionally not updated by this method.
+   *
+   * @async
+   * @param {number} userId - Id of the user to update.
+   * @param {Object} newUserData - Fields to update.
+   * @param {string} newUserData.firstName - User first name.
+   * @param {string} [newUserData.middleName] - User middle name.
+   * @param {string} newUserData.firstLastName - User first last name.
+   * @param {string} [newUserData.secondLastName] - User second last name.
+   * @param {string} newUserData.email - User email address.
+   * @param {number} newUserData.role - FK to the user role catalog.
+   * @param {number} newUserData.status - FK to the user status catalog.
+   * @returns {Promise<{ status: string }>} Result object with a success status message.
+   * @throws {Boom} Throws `Boom.badRequest` if no data is provided,
+   * `Boom.notFound` if the user does not exist, or a wrapped Boom error if
+   * the update fails.
+   */
+  async updateOne(userId, newUserData) {
+
+    if (!newUserData) {
+      throw Boom.badRequest('No data provided');
+    }
+
+    try {
+      const [updatedRows] = await User.update(
+        {
+          firstName:        newUserData.firstName,
+          middleName:       newUserData.middleName,
+          firstLastName:    newUserData.firstLastName,
+          secondLastName:   newUserData.secondLastName,
+          email:            newUserData.email,
+          role:             newUserData.role,
+          status:           newUserData.status,
+        },
+        {
+          where: { id: userId }
+        }
+      );
+
+      if (!updatedRows) {
+        throw Boom.notFound('User not found');
+      }
+
+      return { status: 'UPDATED SUCCESSFULLY' };
+
+    } catch (err) {
+      throw Boom.boomify(err, { message: 'Unable to update user' });
+    }
+  }
 }
