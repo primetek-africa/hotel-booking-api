@@ -4,3 +4,4 @@
 
 export { createOneUser } from './createOne.js';
 export { updateOneUser } from './updateOne.js';
+export { updateUserPhones } from './updatePhones.js';
