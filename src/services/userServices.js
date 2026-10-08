@@ -66,15 +66,15 @@ export class UserService {
       const hash = await hashPassword(newUser.password);
 
       const createdUser = await User.create({
-        firstName:        newUser.firstName,
-        middleName:       newUser.middleName,
-        firstLastName:    newUser.firstLastName,
-        secondLastName:   newUser.secondLastName,
-        email:            newUser.email,
-        password:         hash,
-        role:             newUser.role,
-        status:           newUser.status,
-        lastLogin:        newUser.lastLogin ?? new Date(),
+        firstName: newUser.firstName,
+        middleName: newUser.middleName,
+        firstLastName: newUser.firstLastName,
+        secondLastName: newUser.secondLastName,
+        email: newUser.email,
+        password: hash,
+        role: newUser.role,
+        status: newUser.status,
+        lastLogin: newUser.lastLogin ?? new Date(),
       });
 
       // Optionally persist the user's phone numbers in the same operation
@@ -92,5 +92,194 @@ export class UserService {
     } catch (err) {
       throw Boom.boomify(err, { message: 'Unable to create new user' });
     }
+  }
+
+  /**
+   * Updates an existing user by id.
+   *
+   * Password and last login are intentionally not updated by this method.
+   *
+   * @async
+   * @param {number} userId - Id of the user to update.
+   * @param {Object} newUserData - Fields to update.
+   * @param {string} newUserData.firstName - User first name.
+   * @param {string} [newUserData.middleName] - User middle name.
+   * @param {string} newUserData.firstLastName - User first last name.
+   * @param {string} [newUserData.secondLastName] - User second last name.
+   * @param {string} newUserData.email - User email address.
+   * @param {number} newUserData.role - FK to the user role catalog.
+   * @param {number} newUserData.status - FK to the user status catalog.
+   * @returns {Promise<{ status: string }>} Result object with a success status message.
+   * @throws {Boom} Throws `Boom.badRequest` if no data is provided,
+   * `Boom.notFound` if the user does not exist, or a wrapped Boom error if
+   * the update fails.
+   */
+  async updateOne(userId, newUserData) {
+
+    if (!newUserData) {
+      throw Boom.badRequest('No data provided');
+    }
+
+    try {
+      const [updatedRows] = await User.update(
+        {
+          firstName: newUserData.firstName,
+          middleName: newUserData.middleName,
+          firstLastName: newUserData.firstLastName,
+          secondLastName: newUserData.secondLastName,
+          email: newUserData.email,
+          role: newUserData.role,
+          status: newUserData.status,
+        },
+        {
+          where: { id: userId }
+        }
+      );
+
+      if (!updatedRows) {
+        throw Boom.notFound('User not found');
+      }
+
+      return { status: 'UPDATED SUCCESSFULLY' };
+
+    } catch (err) {
+      throw Boom.boomify(err, { message: 'Unable to update user' });
+    }
+  }
+
+  /**
+   * Replaces the phone numbers associated with a user.
+   *
+   * The list is treated as a whole collection: the user's existing phone
+   * rows are removed and the supplied numbers are inserted in their place,
+   * so the caller must send the complete desired list (not a delta). An
+   * empty array clears the user's phones. The destroy + insert pair runs
+   * inside a transaction so a failure halfway cannot leave the user with
+   * no phones at all.
+   *
+   * @async
+   * @param {number} userId - Id of the user whose phones will be replaced.
+   * @param {string[]} phones - Full list of the user's phone numbers.
+   * @returns {Promise<{status: string, phones: Object[]}>} Result object with
+   * a success status message and the persisted `{ id, number }` records.
+   * @throws {Boom} Throws `Boom.badRequest` if no user ID is provided or
+   * `phones` is not an array, `Boom.notFound` if the user does not exist, or
+   * a wrapped Boom error if the update fails.
+   */
+  async updatePhones(userId, phones) {
+
+    if (!userId) {
+      throw Boom.badRequest('No user identifier provided');
+    }
+
+    if (!Array.isArray(phones)) {
+      throw Boom.badRequest('Phones must be an array');
+    }
+
+    // Normalize: stringify, trim, drop blanks, remove duplicates.
+    const normalizedPhones = [
+      ...new Set(
+        phones
+          .map((number) => String(number).trim())
+          .filter((number) => number.length > 0)
+      ),
+    ];
+
+    const transaction = await User.sequelize.transaction();
+
+    try {
+      const existingUser = await User.findOne({
+        where: { id: userId },
+        transaction,
+      });
+
+      if (!existingUser) {
+        throw Boom.notFound('User not found');
+      }
+
+      await Phone.destroy({
+        where: { user: userId },
+        transaction,
+      });
+
+      const createdPhones = normalizedPhones.length
+        ? await Phone.bulkCreate(
+          normalizedPhones.map((number) => ({
+            number,
+            user: userId,
+          })),
+          { transaction }
+        )
+        : [];
+
+      await transaction.commit();
+
+      return {
+        status: 'PHONES UPDATED SUCCESSFULLY',
+        phones: createdPhones.map(({ id, number }) => ({ id, number })),
+      };
+
+    } catch (err) {
+      await transaction.rollback();
+      throw Boom.boomify(err, { message: 'Unable to update user phones' });
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // STATIC UTILITIES
+  // ---------------------------------------------------------------------------
+  /**
+   * The set of Sequelize includes shared by `listOne` and `listAll` to embed
+   * each foreign-key catalog record as its full row (`id` + `name`), so the
+   * response can be reshaped into nested objects rather than bare FK ids.
+   *
+   * `phones` is included as a plain child collection so the formatted user
+   * also carries its phone numbers.
+   *
+   * @static
+   * @type {Array<Object>}
+   */
+  static CATALOG_INCLUDES = [
+    { model: UserRole, as: 'roleData', attributes: ['id', 'name'] },
+    { model: UserStatus, as: 'statusData', attributes: ['id', 'name'] },
+    { model: Phone, as: 'phones', attributes: ['id', 'number'] },
+  ];
+
+  /**
+   * Reshapes a User Sequelize instance (with its catalog associations
+   * eagerly loaded via `CATALOG_INCLUDES`) into a plain object where the
+   * raw FK ids (`role`, `status`) are replaced by nested `{ id, name }`
+   * objects, and the user's `phones` array is preserved.
+   *
+   * By default the password hash is stripped, since responses returned to
+   * clients must never leak it. Pass `{ includePassword: true }` only for
+   * internal flows (e.g. authentication) that need to compare the hash.
+   *
+   * @private
+   * @static
+   * @param {User} user - The Sequelize User instance to format.
+   * @param {Object} [options] - Formatting options.
+   * @param {boolean} [options.includePassword=false] - When `true`, the
+   * password hash is kept in the returned object.
+   * @returns {Object} The formatted, plain user object.
+   */
+  static _formatUser(user, { includePassword = false } = {}) {
+    const {
+      password,
+      role,
+      status,
+      roleData,
+      statusData,
+      phones,
+      ...rest
+    } = user.toJSON();
+
+    return {
+      ...rest,
+      ...Boom(includePassword ? { password } : {}),
+      role: roleData ?? null,
+      status: statusData ?? null,
+      phones: phones ?? [],
+    };
   }
 }
