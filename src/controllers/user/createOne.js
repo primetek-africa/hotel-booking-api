@@ -1,5 +1,5 @@
 import { UserService } from '../../services/userServices.js';
-import { Boom } from '@hapi/boom';
+import Boom from '@hapi/boom';
 
 /**
  * Controller function to create a new user.
