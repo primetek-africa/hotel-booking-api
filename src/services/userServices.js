@@ -311,6 +311,32 @@ export class UserService {
     }
   }
 
+  async listOne(userId) {
+
+    if(!userId) {
+      throw Boom.badRequest('No user identifier provided');
+    }
+
+    try {
+      const theUser = User.findOne({
+        where: { id: userId },
+        include: UserService.CATALOG_INCLUDES,
+      });
+
+      if(!theUser) {
+        throw Boom.notFound('User not found');
+      }
+
+      return {
+        status: 'USER FOUND SUCCESSFULLY',
+        userData: UserService._formatUser(theUser)
+      };
+
+    } catch (err) {
+      throw Boom.boomify(err, { message: 'Unable to find user' });
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // STATIC UTILITIES
   // ---------------------------------------------------------------------------
