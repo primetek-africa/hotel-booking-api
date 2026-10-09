@@ -262,6 +262,52 @@ export class UserService {
     }
   }
 
+  /**
+   * Deletes a user by id.
+   *
+   * @async
+   * @param {number} userId - Id of the user to delete.
+   * @returns {Promise<{ status: string }>} Result object with a success status message.
+   * @throws {Boom} Throws `Boom.badRequest` if no user ID is provided,
+   * `Boom.notFound` if the user does not exist, or a wrapped Boom error if
+   * deletion fails.
+   */
+  async deleteOne(userId) {
+
+    if(!userId) {
+      throw Boom.badRequest('No user identifier provided');
+    }
+
+    const transaction = await User.sequelize.transaction();
+
+    try {
+      const user =  await User.findByPk(userId, { transaction });
+
+      if(!user) {
+        throw Boom.notFound('user not found');
+      }
+
+      await Phone.destroy({
+        where: { user: userId },
+        transaction
+      });
+
+      const deleteRows = await User.destroy({ where: { id: userId }});
+
+      if (!deleteRows) {
+        throw Boom.notFound('User not found');
+      }
+
+      await transaction.commit();
+
+      return { status: 'DELETED SUCCESSFULLY' };
+
+    } catch (err) {
+      await transaction.rollback();
+      throw Boom.boomify(err, { message: 'Unable to delete user' });
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // STATIC UTILITIES
   // ---------------------------------------------------------------------------

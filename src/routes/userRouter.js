@@ -9,7 +9,8 @@ import {
   createOneUser,
   updateOneUser,
   updateUserPhones,
-  updateLastLoginUser
+  updateLastLoginUser,
+  deleteOneUser
 } from '../controllers/user/index.js';
 
 // Create a new Router instance dedicated to the user resource
@@ -51,5 +52,13 @@ userRouter.post(
   updateLastLoginUser
 );
 
+// -----------------------------------------------------------------------------
+// DELETE /delete → Delete a user
+// Body: User identifier
+// -----------------------------------------------------------------------------
+userRouter.delete(
+  '/delete',
+  deleteOneUser
+);
 
 export default userRouter;
