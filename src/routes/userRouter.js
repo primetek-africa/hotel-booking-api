@@ -10,7 +10,8 @@ import {
   updateOneUser,
   updateUserPhones,
   updateLastLoginUser,
-  deleteOneUser
+  deleteOneUser,
+  listOneUser
 } from '../controllers/user/index.js';
 
 // Create a new Router instance dedicated to the user resource
@@ -59,6 +60,15 @@ userRouter.post(
 userRouter.delete(
   '/delete',
   deleteOneUser
+);
+
+// -----------------------------------------------------------------------------
+// POST /list-one → List a user
+// Body: User identifier
+// -----------------------------------------------------------------------------
+userRouter.post(
+  '/list-one',
+  listOneUser
 );
 
 export default userRouter;
