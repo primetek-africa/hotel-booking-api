@@ -292,7 +292,10 @@ export class UserService {
         transaction
       });
 
-      const deleteRows = await User.destroy({ where: { id: userId }});
+      const deleteRows = await User.destroy({
+        where: { id: userId },
+        transaction
+      });
 
       if (!deleteRows) {
         throw Boom.notFound('User not found');
@@ -305,6 +308,32 @@ export class UserService {
     } catch (err) {
       await transaction.rollback();
       throw Boom.boomify(err, { message: 'Unable to delete user' });
+    }
+  }
+
+  async listOne(userId) {
+
+    if(!userId) {
+      throw Boom.badRequest('No user identifier provided');
+    }
+
+    try {
+      const theUser = User.findOne({
+        where: { id: userId },
+        include: UserService.CATALOG_INCLUDES,
+      });
+
+      if(!theUser) {
+        throw Boom.notFound('User not found');
+      }
+
+      return {
+        status: 'USER FOUND SUCCESSFULLY',
+        userData: UserService._formatUser(theUser)
+      };
+
+    } catch (err) {
+      throw Boom.boomify(err, { message: 'Unable to find user' });
     }
   }
 
