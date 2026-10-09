@@ -292,7 +292,10 @@ export class UserService {
         transaction
       });
 
-      const deleteRows = await User.destroy({ where: { id: userId }});
+      const deleteRows = await User.destroy({
+        where: { id: userId },
+        transaction
+      });
 
       if (!deleteRows) {
         throw Boom.notFound('User not found');
