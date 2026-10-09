@@ -38,7 +38,7 @@ export const updateUserPhones = async (req, res, next) => {
       return res.status(200).json({
         success: true,
         message: 'User phones updated successfully',
-        phones: response.phones
+        phones: response.phones,
       });
     }
   } catch (err) {

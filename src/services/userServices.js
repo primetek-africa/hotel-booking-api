@@ -330,7 +330,7 @@ export class UserService {
     }
 
     try {
-      const theUser = User.findOne({
+      const theUser = await User.findOne({
         where: { id: userId },
         include: UserService.CATALOG_INCLUDES,
       });
