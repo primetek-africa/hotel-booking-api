@@ -8,7 +8,8 @@ import { Router } from "express";
 import {
   createOneUser,
   updateOneUser,
-  updateUserPhones
+  updateUserPhones,
+  updateLastLoginUser
 } from '../controllers/user/index.js';
 
 // Create a new Router instance dedicated to the user resource
@@ -24,7 +25,7 @@ userRouter.post(
 );
 
 // -----------------------------------------------------------------------------
-// PUT /update → Update an user
+// PUT /update → Update a user
 // Body: User identifier and new user data
 // -----------------------------------------------------------------------------
 userRouter.put(
@@ -33,12 +34,22 @@ userRouter.put(
 );
 
 // -----------------------------------------------------------------------------
-// PUT /update-phones → Update an user's phone numbers
+// PUT /update-phones → Update a user's phone numbers
 // Body: User identifier and the full list of phone numbers
 // -----------------------------------------------------------------------------
 userRouter.put(
   '/update-phones',
   updateUserPhones
 );
+
+// -----------------------------------------------------------------------------
+// POST /update-last-login → Update a user's session last login
+// Body: User identifier
+// -----------------------------------------------------------------------------
+userRouter.post(
+  '/update-last-login',
+  updateLastLoginUser
+);
+
 
 export default userRouter;

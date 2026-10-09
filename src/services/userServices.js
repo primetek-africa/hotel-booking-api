@@ -225,6 +225,43 @@ export class UserService {
     }
   }
 
+  /**
+   * Updates the `last_login` timestamp for the given user to the current
+   * date. Intended to be called after a successful authentication so the
+   * account record reflects when the user last logged in.
+   *
+   * @async
+   * @param {number} userId - Id of the user whose last login should be
+   * updated.
+   * @returns {Promise<{ status: string }>} Result object with a success
+   * status message.
+   * @throws {Boom} Throws `Boom.badRequest` if no user ID is provided,
+   * `Boom.notFound` if the user does not exist, or a wrapped Boom error if
+   * the update fails.
+   */
+  async updateLastLogin(userId) {
+
+    if (!userId) {
+      throw Boom.badRequest('No user identifier provided');
+    }
+
+    try {
+      const [updatedRows] = await User.update(
+        { lastLogin: new Date() },
+        { where: { id: userId } }
+      );
+
+      if (!updatedRows) {
+        throw Boom.notFound('User not found');
+      }
+
+      return { status: 'LAST LOGIN UPDATED SUCCESSFULLY' };
+
+    } catch (err) {
+      throw Boom.boomify(err, { message: 'Unable to update last login' });
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // STATIC UTILITIES
   // ---------------------------------------------------------------------------
