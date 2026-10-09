@@ -311,6 +311,18 @@ export class UserService {
     }
   }
 
+  /**
+   * Retrieves a single user by id, embedding its foreign-key catalog
+   * records (role, user status) as nested `{ id, name }` objects and
+   * attaching the user's phone list.
+   *
+   * @async
+   * @param {number} userId - The id of the user to retrieve.
+   * @returns {Promise<Object>} The formatted user record.
+   * @throws {Boom} Throws `Boom.badRequest` if no user ID is provided,
+   * `Boom.notFound` if the user does not exist, or a wrapped Boom error if
+   * the lookup fails.
+   */
   async listOne(userId) {
 
     if(!userId) {
