@@ -5,3 +5,5 @@
 export { createOneUser } from './createOne.js';
 export { updateOneUser } from './updateOne.js';
 export { updateUserPhones } from './updatePhones.js';
+export { updateLastLoginUser } from './updateLastLogin.js';
+export { deleteOneUser } from './deleteOne.js';
