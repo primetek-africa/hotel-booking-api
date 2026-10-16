@@ -1,4 +1,21 @@
 services:
+  hotel-booking-api:
+    build: .
+    container_name: hotel-booking-api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Inside the Docker network the DB is reached by service name
+      # and its container port, not by 127.0.0.1 / DB_PORT
+      DB_HOST: hotel-booking-db
+      DB_PORT: ${DB_CONTAINER_PORT}
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    depends_on:
+      hotel-booking-db:
+        condition: service_healthy
+    networks:
+      - hotel-booking-network
   hotel-booking-db:
     image: postgres:16
     container_name: hotel-booking-db
