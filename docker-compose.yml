@@ -5,36 +5,18 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
+      NODE_ENV: development
       DB_HOST: hotel-booking-db
       DB_PORT: ${DB_CONTAINER_PORT}
     ports:
       - "${API_PORT}:${API_PORT}"
+    volumes:
+      # Live code: edits on your machine reload the API in the container
+      - ./src:/app/src
+      - ./nodemon.json:/app/nodemon.json
     depends_on:
       hotel-booking-db:
         condition: service_healthy
-    networks:
-      - hotel-booking-network
-  hotel-booking-db:
-    image: postgres:16
-    container_name: hotel-booking-db
-    restart: always
-    command: ["postgres", "-c", "timezone=UTC", "-c", "log_timezone=UTC"]
-    environment:
-      TZ: UTC
-      PGTZ: UTC
-      PGPORT: ${DB_CONTAINER_PORT}
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "${DB_PORT}:${DB_CONTAINER_PORT}"
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -p $${PGPORT}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
     networks:
       - hotel-booking-network
 
