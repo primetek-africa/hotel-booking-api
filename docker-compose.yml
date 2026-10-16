@@ -5,8 +5,6 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      # Inside the Docker network the DB is reached by service name
-      # and its container port, not by 127.0.0.1 / DB_PORT
       DB_HOST: hotel-booking-db
       DB_PORT: ${DB_CONTAINER_PORT}
     ports:
