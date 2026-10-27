@@ -55,14 +55,28 @@ api.use(morgan('dev'));
 // Mounted before the body parsers and the routers so preflight OPTIONS
 // requests (which carry no apikey/Authorization headers) are answered here
 // and never reach checkAPIkey.
+const allowedOrigins = [
+  config.corsOrigin,
+  ...(config.env === 'development'
+    ? [
+      'https://sandbox.embed.apollographql.com',
+      'https://studio.apollographql.com',
+    ]
+    : []
+  ),
+];
+
 api.use(cors({
-  origin: config.corsOrigin,
+  origin: allowedOrigins,
   allowedHeaders: ['Content-Type', 'Authorization', 'apikey'],
   // Headers the browser is allowed to read from the response:
   // - X-Access-Token: the rotated JWT
   // - Retry-After / RateLimit: rate-limit info on 429 responses
   exposedHeaders: ['X-Access-Token', 'Retry-After', 'RateLimit'],
 }));
+
+// Middleware for parsing JSON bodies
+api.use(bodyParser.json());
 
 // GraphQL - Layer - mounted BEFORE body parsers because Apollo Server
 // parses the request stream itself. CORS stays above so preflights are
@@ -71,10 +85,9 @@ await useGraphql(api);
 
 // Middleware to parse URL-encoded data
 api.use(express.urlencoded({ extended: false }));
+
 // Middleware to parse JSON data
 api.use(express.json());
-// Middleware for parsing JSON bodies
-api.use(bodyParser.json());
 
 // Static files path
 // Store in the constant the project dirname

@@ -111,7 +111,7 @@ export const useGraphql = async (api) => {
   api.use(
     '/api/v1/graphql',
     graphqlIpLimiter,
-    checkAPIkey,
+    //checkAPIkey,
     expressMiddleware(server, {
       context: async ({ req, res }) => buildContext({ req, res }),
     }),

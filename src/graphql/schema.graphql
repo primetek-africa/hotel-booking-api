@@ -14,13 +14,13 @@ type User {
   firstLastName:    String!
   secondLastName:   String
   email:            String!
-  password          String!
+  password:         String!
   role:             UserRole!
   status:           UserStatus!
   lastLogin:        DateTime!
   phones:           [Phone!]!
-  createdAt         DateTime!
-  UpdatedAt         DateTime!
+  createdAt:        DateTime!
+  updatedAt:        DateTime!
 }
 
 type AuthPayload {
@@ -42,9 +42,9 @@ input LoginDto {
 
 input ResetPasswordDto {
   email:            String!
-  firstName         String!
-  firstLastName     String!
-  newPassword       String!
+  firstName:        String!
+  firstLastName:    String!
+  newPassword:      String!
 }
 
 input UserIdDto     { id: ID! }
@@ -57,21 +57,21 @@ input CreateUserDto {
   firstLastName:    String!
   secondLastName:   String
   email:            String!
-  password          String!
+  password:         String!
   role:             ID!
   status:           ID!
-  phones:           [Phone!]!
+  phones:           [String!]!
   lastLogin:        DateTime
 }
 
 input UpdateUserDto {
-  firstName         String
-  middleName        String
-  firstLastName     String
-  secondLastName    String
-  email             String
-  role              ID
-  status            ID
+  firstNam:         String
+  middleName:       String
+  firstLastName:    String
+  secondLastName:   String
+  email:            String
+  role:             ID
+  status:           ID
 }
 
 input UpdatePhonesDto {
@@ -109,7 +109,7 @@ type Mutation {
   "Create a new user. Administrator only."
   newUser(dto: CreateUserDto!): User!
 
-  "Update an existing user (partial)". Administrator only."
+  "Update an existing user (partial). Administrator only."
   updateUser(id: ID!, dto: UpdateUserDto!): User!
 
   "Replace a user's full phone collection. Administrator only."
