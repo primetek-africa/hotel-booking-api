@@ -64,11 +64,6 @@ api.use(cors({
   exposedHeaders: ['X-Access-Token', 'Retry-After', 'RateLimit'],
 }));
 
-// GraphQL - Layer - mounted BEFORE body parsers because Apollo Server
-// parses the request stream itself. CORS stays above so preflights are
-// answered at the edge.
-await useGraphql(api);
-
 // Middleware to parse URL-encoded data
 api.use(express.urlencoded({ extended: false }));
 // Middleware to parse JSON data
@@ -82,6 +77,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Immediately Invoked Function Expression (IIFE) to run the server
 (async () => {
+  // GraphQL - Layer - mounted BEFORE body parsers because Apollo Server
+  // parses the request stream itself. CORS stays above so preflights are
+  // answered at the edge.
+  await useGraphql(api);
+
   // Await the api to start listening on the specified IP address and port
   const createApi = await api.listen(port, theIPAddress, (req, res) => {
     // Log the server start information to the console
