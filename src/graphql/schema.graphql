@@ -20,7 +20,7 @@ type User {
   lastLogin:        DateTime!
   phones:           [Phone!]!
   createdAt:        DateTime!
-  UpdatedAt:        DateTime!
+  updatedAt:        DateTime!
 }
 
 type AuthPayload {
