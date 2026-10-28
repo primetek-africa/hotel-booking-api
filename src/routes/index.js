@@ -5,6 +5,7 @@ import { Router } from "express";
 import userRouter from './userRouter.js';
 import authenticationRouter from './authenticationRouter.js';
 import conversationStatusRouter from './conversationStatusRouter.js';
+import conversationRouter from './conversationRouter.js';
 
 // Function to set up API routes
 const routerAPI = (api) => {
@@ -19,6 +20,7 @@ const routerAPI = (api) => {
   router.use('/auth', authenticationRouter)
   router.use('/users', userRouter);
   router.use('/conversation-statuses', conversationStatusRouter);
+  router.use('/conversations', conversationRouter);
 };
 
 // Export the routerAPI function for use in other API modules
