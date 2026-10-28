@@ -53,5 +53,6 @@ export const Conversation = sequelize.define(
     tableName: CONVERSATION_TABLE,
     modelName: 'conversation',
     timestamps: true,
+    updatedAt: false,
   }
 );
