@@ -74,3 +74,24 @@ export const graphqlIpLimiter = rateLimit({
   limit: 600,
   handler: tooManyRequests('Too many requests to /api/v1/graphql. Please slow down.'),
 });
+
+// ── Messages ──────────────────────────────────────────────────────────────
+// Per-user (JWT) AND per-IP. Placed AFTER authAppVerifyToken so req.user
+// is populated; that means a compromised shared IP can't spam on behalf
+// of every user, and a compromised user can't spam from every IP.
+
+export const messageCreateLimiter = rateLimit({
+  ...baseOptions,
+  windowMs: 60 * 1000,   // 1 minute
+  limit: 30,             // 30 messages / minute / user
+  keyGenerator: (req) => `${ipKeyGenerator(req.ip)}|${req.user?.id ?? 'anon'}`,
+  handler: tooManyRequests('Too many messages. Please slow down.'),
+});
+
+export const messageReadLimiter = rateLimit({
+  ...baseOptions,
+  windowMs: 60 * 1000,
+  limit: 120,            // 120 reads / minute / user
+  keyGenerator: (req) => `${ipKeyGenerator(req.ip)}|${req.user?.id ?? 'anon'}`,
+  handler: tooManyRequests('Too many requests. Please slow down.'),
+});
