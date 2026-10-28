@@ -19,6 +19,8 @@ import { theIPAddress, port } from './libraries/netConfig.js';
 import routerAPI from './routes/index.js';
 // Import the GraphQL with the Apollo server instance
 import { useGraphql } from './graphql/index.js';
+// Import the webSocket initialization
+import { initSocket } from './sockets/index.js';
 // Import the configuration module
 import { config } from './config/config.js';
 // Custom error handling middlewares
@@ -96,10 +98,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Immediately Invoked Function Expression (IIFE) to run the server
 (async () => {
   // Await the api to start listening on the specified IP address and port
-  const createApi = await api.listen(port, theIPAddress, (req, res) => {
+  const httpServer = await api.listen(port, theIPAddress, (req, res) => {
     // Log the server start information to the console
     console.log(`Server on port http://${theIPAddress}:${port}`);
   });
+
+  const io = initSocket(httpServer);
+  api.set('io', io);
 })();
 
 // Set up all Sequelize models associations before any database query is made
