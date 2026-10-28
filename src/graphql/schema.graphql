@@ -65,7 +65,7 @@ input CreateUserDto {
 }
 
 input UpdateUserDto {
-  firstNam:         String
+  firstName:         String
   middleName:       String
   firstLastName:    String
   secondLastName:   String
