@@ -36,7 +36,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"firstName\": \"Lionel\",\r\n    \"middleName\": \"Andreas\",\r\n    \"firstLastName\": \"Messi\",\r\n    \"secondLastName\": \"Goat\",\r\n    \"email\": \"messi@mail.com\",\r\n    \"password\": \"pass1234\",\r\n    \"role\": \"1\",\r\n    \"status\": \"1\",\r\n    \"phones\": [\"123456789\", \"987654321\"]\r\n}",
+              "raw": "{\r\n    \"firstName\": \"James\",\r\n    \"middleName\": \"Rodriguez\",\r\n    \"firstLastName\": \"Smith\",\r\n    \"secondLastName\": \"\",\r\n    \"email\": \"james@mail.com\",\r\n    \"password\": \"pass1234\",\r\n    \"role\": \"3\",\r\n    \"status\": \"1\",\r\n    \"phones\": [\"4545454567\", \"9898989877\"]\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -82,7 +82,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"userId\": \"4\",\r\n    \"firstName\": \"Michael\",\r\n    \"middleName\": \"Junior\",\r\n    \"firstLastName\": \"Jackson\",\r\n    \"secondLastName\": \"Jackson\",\r\n    \"email\": \"jackson@mail.com\",\r\n    \"role\": \"2\",\r\n    \"status\": \"2\"\r\n}",
+              "raw": "{\r\n    \"userId\": \"9\",\r\n    \"firstName\": \"Kylian\",\r\n    \"middleName\": \"Junior\",\r\n    \"firstLastName\": \"Mbappe\",\r\n    \"secondLastName\": \"Mbappe\",\r\n    \"email\": \"kylian@mail.com\",\r\n    \"role\": \"2\",\r\n    \"status\": \"2\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -128,7 +128,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"userId\": \"8\",\r\n    \"phones\": [\r\n        \"0000000000\",\r\n        \"2222222222\"\r\n    ]\r\n}",
+              "raw": "{\r\n    \"userId\": \"2\",\r\n    \"phones\": [\r\n        \"243893740419\",\r\n        \"243979634557\"\r\n    ]\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -174,7 +174,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"userId\": \"8\"\r\n}",
+              "raw": "{\r\n    \"userId\": \"9\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -220,7 +220,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"userId\": \"8\"\r\n}",
+              "raw": "{\r\n    \"userId\": \"7\"\r\n    \r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -390,7 +390,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"jonathan@mail.com\",\r\n    \"password\": \"password1234\"\r\n}",
+              "raw": "{\r\n    \"email\": \"jonathan@mail.com\",\r\n    \"password\": \"pass1234\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -426,7 +426,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"jonathan@gmail.com\",\r\n    \"firstName\": \"Muliri07\",\r\n    \"firstLastName\": \"Jonathan05\",\r\n    \"newPassword\": \"password1234\"\r\n}",
+              "raw": "{\r\n    \"email\": \"jonathan@mail.com\",\r\n    \"firstName\": \"Muliri\",\r\n    \"firstLastName\": \"Jonathan\",\r\n    \"newPassword\": \"pass1234\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -441,6 +441,297 @@
               "path": [
                 "auth",
                 "reset-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "graphql",
+      "item": [
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\r\n  login(dto: {\r\n    email: \"jonathan@mail.com\"\r\n    password: \"jonathan1234\"\r\n  }) {\r\n    token\r\n    user {\r\n      id\r\n      firstName\r\n      firstLastName\r\n      email\r\n      role   { id name }\r\n      status { id name }\r\n      phones { id number }\r\n    }\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "resetPassword",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\r\n  resetPassword(dto: {\r\n    email: \"jonathan@mail.com\"\r\n    firstName: \"Muliri\"\r\n    firstLastName: \"Jonathan\"\r\n    newPassword: \"jonathan1234\"\r\n  }) {\r\n    success\r\n    message\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "me",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query {\r\n  me {\r\n    id\r\n    firstName\r\n    middleName\r\n    firstLastName\r\n    secondLastName\r\n    email\r\n    role       { id name }\r\n    status     { id name }\r\n    lastLogin\r\n    phones     { id number }\r\n    createdAt\r\n    updatedAt\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query {\r\n  user(dto: { id: \"11\" }) {\r\n    id\r\n    firstName\r\n    middleName\r\n    firstLastName\r\n    secondLastName\r\n    email\r\n    role   { id name }\r\n    status { id name }\r\n    phones { id number }\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "userByEmail",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query {\r\n  userByEmail(dto: { email: \"jonathan@mail.com\" }) {\r\n    id\r\n    firstName\r\n    firstLastName\r\n    email\r\n    role   { id name }\r\n    status { id name }\r\n    phones { id number }\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "allUsers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query {\r\n  allUsers {\r\n    id\r\n    firstName\r\n    firstLastName\r\n    email\r\n    role   { id name }\r\n    status { id name }\r\n    phones { number }\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateUser",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\r\n  updateUser(\r\n    id: \"11\"\r\n    dto: {\r\n      firstName: \"Cristiano\"\r\n      middleName: \"Junior\"\r\n      firstLastName: \"Ronaldo\"\r\n      secondLastName: \"Ronaldo\"\r\n      email: \"cristiano@mail.com\"\r\n      role: \"2\"\r\n      status: \"1\"\r\n    }\r\n  ) {\r\n    id\r\n    firstName\r\n    middleName\r\n    firstLastName\r\n    secondLastName\r\n    email\r\n    role   { id name }\r\n    status { id name }\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateUserPhones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\r\n  updateUserPhones(dto: {\r\n    id: \"11\"\r\n    phones: [\"0000000001\", \"2222222222\"]\r\n  }) {\r\n    id\r\n    phones { id number }\r\n  }\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteUser",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation {\r\n  deleteUser(dto: { id: \"11\" })\r\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{api_address}}/graphql",
+              "host": [
+                "{{api_address}}"
+              ],
+              "path": [
+                "graphql"
               ]
             }
           },
