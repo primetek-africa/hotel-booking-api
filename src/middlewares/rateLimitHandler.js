@@ -75,7 +75,7 @@ export const graphqlIpLimiter = rateLimit({
   handler: tooManyRequests('Too many requests to /api/v1/graphql. Please slow down.'),
 });
 
-// ── Messages ──────────────────────────────────────────────────────────────
+// ------------------------------ Message --------------------------------------
 // Per-user (JWT) AND per-IP. Placed AFTER authAppVerifyToken so req.user
 // is populated; that means a compromised shared IP can't spam on behalf
 // of every user, and a compromised user can't spam from every IP.
