@@ -27,7 +27,7 @@ export const Conversation = sequelize.define(
     },
     staff: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'user',
         key: 'id',
