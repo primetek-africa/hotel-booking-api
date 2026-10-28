@@ -26,6 +26,8 @@ export const config = {
   APIKey: process.env.API_KEY,
   // JWT secret key for the user authentication
   authAppJwtKey: process.env.AUTH_API_JWT_SECRET_KEY,
+  // Symmetric key (hex, 32 bytes) for message body encryption at rest.
+  messageEncryptionKey: process.env.MESSAGE_ENCRYPTION_KEY,
   // Allowed front-end origin for CORS request
   corsOrigin: process.env.CORS_ORIGIN,
   // Proxy hops in front of the API
