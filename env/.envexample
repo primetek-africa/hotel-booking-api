@@ -43,6 +43,8 @@ PGADMIN_CONTAINER_PORT=80
 API_KEY=2e9bc6c94a4cbdfe2a31d2df79103a5eb3702eaf5d7018d47a774e9540a8ec29
 # Secret key to hash the JWT tokens
 AUTH_API_JWT_SECRET_KEY=2e2ecbce601e7231740f546c38c3e23ebc3e91822ebb6d7633c72ad263b8e3bb
+# Message body encryption secret
+MESSAGE_ENCRYPTION_KEY=8f3c2a7d9e1b6f405c8a2d7e3f916b04a6d2c8e5f1b7390d4e7a6c2f8b5d1039
 
 # ---------------------------- Front-end APP -----------------------------------
 
