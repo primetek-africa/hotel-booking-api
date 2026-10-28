@@ -8,3 +8,6 @@ export { deleteOneConversation } from './deleteOne.js';
 export { listOneConversation } from './listOne.js';
 export { listAllConversations } from './listAll.js';
 export { listByUserConversations } from './listByUser.js';
+export { openConversation } from './openConversation.js';
+export { listMyConversations } from './listMyConversations.js';
+export { claimConversation } from './claimConversation.js';
