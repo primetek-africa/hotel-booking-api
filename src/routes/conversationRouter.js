@@ -22,22 +22,25 @@ import {
   listOneConversation,
   listAllConversations,
   listByUserConversations,
+  openConversation,
+  listMyConversations,
+  claimConversation
 } from '../controllers/conversation/index.js';
 
 // Create a new Router instance dedicated to the conversation resource
 const conversationRouter = Router();
 
 // -----------------------------------------------------------------------------
-// POST /create → Create a new conversation
+// POST /create → Create a new conversation (Administrator)
 // Body: { guestId, staffId, statusId }
 // -----------------------------------------------------------------------------
 conversationRouter.post(
   '/create',
   // Step 1: Verify the API key
   checkAPIkey,
-  // Step 2: Verify the session token
+  // Step 2: Verify the session token (populates req.user)
   authAppVerifyToken,
-  // Step 3: Verify the user role
+  // Step 3: Role gate — Administrator only
   checkRole(['Administrator']),
   // Step 4: Validate the payload schema
   validatorHandler(conversationSchema.createData, 'body'),
@@ -51,48 +54,67 @@ conversationRouter.post(
 // -----------------------------------------------------------------------------
 conversationRouter.put(
   '/update',
+  // Step 1: Verify the API key
   checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
   authAppVerifyToken,
+  // Step 3: Role gate — Administrator only
   checkRole(['Administrator']),
+  // Step 4: Validate the payload schema
   validatorHandler(conversationSchema.updateData, 'body'),
+  // Step 5: Delegate to the controller
   updateOneConversation
 );
 
 // -----------------------------------------------------------------------------
-// DELETE /delete → Delete a conversation by its identifier
+// DELETE /delete → Delete a conversation by its identifier (Administrator)
 // Body: { conversationId }
 // -----------------------------------------------------------------------------
 conversationRouter.delete(
   '/delete',
+  // Step 1: Verify the API key
   checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
   authAppVerifyToken,
+  // Step 3: Role gate — Administrator only
   checkRole(['Administrator']),
+  // Step 4: Validate the payload schema
   validatorHandler(conversationSchema.getById, 'body'),
+  // Step 5: Delegate to the controller
   deleteOneConversation
 );
 
 // -----------------------------------------------------------------------------
-// POST /list-one → List a conversation by its identifier
+// POST /list-one → List a conversation by its identifier (Administrator)
 // Body: { conversationId }
 // -----------------------------------------------------------------------------
 conversationRouter.post(
   '/list-one',
+  // Step 1: Verify the API key
   checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
   authAppVerifyToken,
+  // Step 3: Role gate — Administrator only
   checkRole(['Administrator']),
+  // Step 4: Validate the payload schema
   validatorHandler(conversationSchema.getById, 'body'),
+  // Step 5: Delegate to the controller
   listOneConversation
 );
 
 // -----------------------------------------------------------------------------
-// GET /list-all → List every conversation
+// GET /list-all → List every conversation (Administrator)
 // Body: (none)
 // -----------------------------------------------------------------------------
 conversationRouter.get(
   '/list-all',
+  // Step 1: Verify the API key
   checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
   authAppVerifyToken,
+  // Step 3: Role gate — Administrator only
   checkRole(['Administrator']),
+  // Step 4: Delegate to the controller
   listAllConversations
 );
 
@@ -102,11 +124,66 @@ conversationRouter.get(
 // -----------------------------------------------------------------------------
 conversationRouter.post(
   '/list-by-user',
+  // Step 1: Verify the API key
   checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
   authAppVerifyToken,
+  // Step 3: Role gate — Administrator only
   checkRole(['Administrator']),
+  // Step 4: Validate the payload schema
   validatorHandler(conversationSchema.listByUser, 'body'),
+  // Step 5: Delegate to the controller
   listByUserConversations
+);
+
+// -----------------------------------------------------------------------------
+// POST /open → Guest opens a conversation (no staff assigned yet)
+// Body: (none — the guest is derived from the JWT)
+// -----------------------------------------------------------------------------
+conversationRouter.post(
+  '/open',
+  // Step 1: Verify the API key
+  checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
+  authAppVerifyToken,
+  // Step 3: Role gate — Guest only (staff cannot open a guest request)
+  checkRole(['Guest']),
+  // Step 4: Delegate to the controller
+  openConversation
+);
+
+// -----------------------------------------------------------------------------
+// GET /mine → List the caller's own conversations
+// Body: (none — the caller is derived from the JWT)
+// -----------------------------------------------------------------------------
+conversationRouter.get(
+  '/mine',
+  // Step 1: Verify the API key
+  checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
+  authAppVerifyToken,
+  // Step 3: Role gate — Administrator, Staff and Guest all have an inbox
+  checkRole(['Administrator', 'Staff', 'Guest']),
+  // Step 4: Delegate to the controller
+  listMyConversations
+);
+
+// -----------------------------------------------------------------------------
+// POST /claim → Staff claims an unassigned conversation
+// Body: { conversationId }
+// -----------------------------------------------------------------------------
+conversationRouter.post(
+  '/claim',
+  // Step 1: Verify the API key
+  checkAPIkey,
+  // Step 2: Verify the session token (populates req.user)
+  authAppVerifyToken,
+  // Step 3: Role gate — Staff and Administrator (both can answer chats)
+  checkRole(['Staff', 'Administrator']),
+  // Step 4: Validate the payload schema
+  validatorHandler(conversationSchema.getById, 'body'),
+  // Step 5: Delegate to the controller
+  claimConversation
 );
 
 export default conversationRouter;
