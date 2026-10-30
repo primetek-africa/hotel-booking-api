@@ -319,6 +319,102 @@ export class ConversationService {
     }
   }
 
+  /**
+   * Guest opens a new conversation (status 'Open', no staff yet).
+   * Rule: a guest may only have ONE non-closed conversation at a time.
+   */
+  async openForGuest(user) {
+    try {
+      const open = await ConversationStatus.findOne({ where: { name: 'Open' } });
+      const closed = await ConversationStatus.findOne({ where: { name: 'Closed' } });
+      if (!open || !closed) throw Boom.internal('Conversation statuses are not seeded');
+
+      const active = await Conversation.findOne({
+        where: { guest: user.id, status: { [Op.ne]: closed.id } },
+      });
+      if (active) throw Boom.conflict('You already have an active conversation');
+
+      const created = await Conversation.create({
+        guest: user.id,
+        staff: null,
+        status: open.id,
+      });
+
+      const full = await Conversation.findByPk(created.id, {
+        include: ConversationService.CATALOG_INCLUDES,
+      });
+
+      return {
+        status: 'CREATED SUCCESSFULLY',
+        conversationData: ConversationService._formatConversation(full),
+      };
+    } catch (err) {
+      if (Boom.isBoom(err)) throw err;
+      throw Boom.boomify(err, { message: 'Unable to open conversation' });
+    }
+  }
+
+  /**
+   * Guest -> own conversations.
+   * Staff -> unclaimed conversations (the queue) + the ones they own.
+   */
+  async listMine(user) {
+    try {
+      const where = user.role === 'Staff'
+        ? { [Op.or]: [{ staff: user.id }, { staff: null }] }
+        : { guest: user.id };
+
+      const rows = await Conversation.findAll({
+        where,
+        order: [['id', 'DESC']],
+        include: ConversationService.CATALOG_INCLUDES,
+      });
+
+      return {
+        status: 'CONVERSATIONS FOUND SUCCESSFULLY',
+        total: rows.length,
+        conversationsData: rows.map(ConversationService._formatConversation),
+      };
+    } catch (err) {
+      throw Boom.boomify(err, { message: 'Unable to find your conversations' });
+    }
+  }
+
+  /**
+   * Staff claims an unassigned conversation.
+   * The UPDATE is conditional (`staff IS NULL`), so two staff members
+   * clicking "Take" at the same time cannot both win: one gets 0 rows.
+   */
+  async claim(user, conversationId) {
+    try {
+      const assigned = await ConversationStatus.findOne({ where: { name: 'Assigned' } });
+      if (!assigned) throw Boom.internal("'Assigned' status is not seeded");
+
+      const [affected] = await Conversation.update(
+        { staff: user.id, status: assigned.id },
+        { where: { id: conversationId, staff: null } }
+      );
+
+      if (!affected) {
+        const exists = await Conversation.findByPk(conversationId, { attributes: ['id'] });
+        if (!exists) throw Boom.notFound('Conversation not found');
+        throw Boom.conflict('This conversation was already taken by another staff member');
+      }
+
+      const full = await Conversation.findByPk(conversationId, {
+        include: ConversationService.CATALOG_INCLUDES,
+      });
+
+      return {
+        status: 'CLAIMED SUCCESSFULLY',
+        conversationData: ConversationService._formatConversation(full),
+      };
+    } catch (err) {
+      if (Boom.isBoom(err)) throw err;
+      throw Boom.boomify(err, { message: 'Unable to claim conversation' });
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // STATIC UTILITIES
   // ---------------------------------------------------------------------------
