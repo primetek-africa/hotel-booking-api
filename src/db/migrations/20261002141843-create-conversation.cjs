@@ -26,7 +26,7 @@ module.exports = {
         },
         staff: {
           type: Sequelize.INTEGER,
-          allowNull: false,
+          allowNull: true,
           references: {
             model: 'user',
             key: 'id',
