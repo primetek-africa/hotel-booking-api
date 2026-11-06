@@ -20,32 +20,56 @@ const statusOf = (fn) => {
 describe('assertConversationAccess', () => {
   it('allows the guest  participant', () => {
     expect(statusOf(() =>
-      assertConversationAccess({ id: 5, role: 'Guest' }, conversation))).toBe(200);
+      assertConversationAccess(
+        { id: 5, role: 'Guest' },
+        conversation
+      )
+    )).toBe(200);
   });
 
   it('allows the assigned staff (uds compared as strings)', () => {
     expect(statusOf(() =>
-      assertConversationAccess({ id: 2, role: 'Staff' },  conversation))).toBe(200);
+      assertConversationAccess(
+        { id: 2, role: 'Staff' },
+        conversation
+      )
+    )).toBe(200);
   });
 
   it('allows any Administrator', () => {
     expect(statusOf(() =>
-      assertConversationAccess({ id: 99, role: 'Administrator' }, conversation))).toBe(200);
+      assertConversationAccess(
+        { id: 99, role: 'Administrator' },
+        conversation
+      )
+    )).toBe(200);
   });
 
   it('forbids a non-participant', () => {
     expect(statusOf(() =>
-      assertConversationAccess({ id: 7, role: 'Guest' }, conversation))).toBe(403);
+      assertConversationAccess(
+        { id: 7, role: 'Guest' },
+        conversation
+      )
+    )).toBe(403);
   });
 
   it('returns 401 without a user', () => {
     expect(statusOf(() =>
-      assertConversationAccess(null, conversation))).toBe(401);
+      assertConversationAccess(
+        null,
+        conversation
+      )
+    )).toBe(401);
   });
 
   it('forbids a staff when the conversation has no staff yet', () => {
     expect(statusOf(() =>
-      assertConversationAccess({ id: 2, role: 'Staff' }, conversationWithoutStaff))).toBe(403);
+      assertConversationAccess(
+        { id: 2, role: 'Staff' },
+        conversationWithoutStaff
+      )
+    )).toBe(403);
   });
 });
 
@@ -54,17 +78,29 @@ describe('assertMessageDeletableBy', () => {
 
   it('allows the sender', () => {
     expect(statusOf(() =>
-      assertMessageDeletableBy({ id: 5, role: 'Guest' }, message))).toBe(200);
+      assertMessageDeletableBy(
+        { id: 5, role: 'Guest' },
+        message
+      )
+    )).toBe(200);
   });
 
 
   it('allows an Administrator', () => {
     expect(statusOf(() =>
-      assertMessageDeletableBy({ id: 1, role: 'Administrator' }, message))).toBe(200);
+      assertMessageDeletableBy(
+        { id: 1, role: 'Administrator' },
+        message
+      )
+    )).toBe(200);
   });
 
   it('forbids someone else', () => {
     expect(statusOf(() =>
-      assertMessageDeletableBy({ id: 2, role: 'Staff' }, message))).toBe(403);
+      assertMessageDeletableBy(
+        { id: 2, role: 'Staff' },
+        message
+      )
+    )).toBe(403);
   });
 });
